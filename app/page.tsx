@@ -1,64 +1,69 @@
-'use client';
-import { useState } from "react";
+"use client"
+import { type ChangeEventHandler, useState } from "react"
 
- function Page() {
+interface BillFormProps {
+  addBill: (bill: number) => void
+}
 
-  const [bill, setBill] = useState("");
-  const [tip, setTip] = useState(0);
-  const [total, setTotal] = useState(0);
+const BillForm = ({ addBill }: BillFormProps) => {
+  const [bill, setBill] = useState("")
 
-  const calculate = () => {
-    let b = Number(bill);
-    let tip = b * 0.05;
-    let total  = b + tip;
+  const handleChanged: ChangeEventHandler<HTMLInputElement> = (event) => {
+    setBill(event.target.value)
+  }
 
-    setTip(tip);
-    setTotal(total);
-  };
-
-  const reset = () => {
-    setBill("");
-    setTip(0);
-    setTotal(0);
-  };
+  const handleAddBill = () => {
+    addBill(Number(bill))
+    setBill("")
+  }
 
   return (
-  <div className="w-[755] h-[755] bg-blue-200 flex justify-center items-center text-black">
-
-  <div className="bg-blue-300 p-6 rounded-3xl w-[900px]">
-
-    <div className="bg-white text-center p-3 rounded-xl font-bold text-xl mb-6">My Tip Calculator</div>
-
-    <div className="flex">
-        <div className="bg-gray-100 w-1/2 p-6 rounded-l-3xl flex flex-col gap-4">
-        <label className="font-semibold">Bill Amount</label>
-        <input
-          type="number"
-          value={bill}
-          onChange={(e) => setBill(e.target.value)} className="p-3 rounded-lg border bg-gray-200 text-black" />
-
-  <button onClick={calculate}className="mt-6 p-3 border-2 border-blue-500 rounded-xl font-bold">Calculate</button>
-          </div>
-  <div className="bg-purple-300 w-1/2 p-6 rounded-r-3xl flex flex-col justify-between">
-
-  <div className="flex flex-col gap-4">
-  <div className="bg-white p-4 rounded-xl flex justify-between font-semibold">
-    <span>Tip / person</span>
-    <span>{tip.toFixed(2)} ฿</span>
-  </div>
-  <div className="bg-white p-4 rounded-xl flex justify-between font-semibold">
-    <span>Total / person</span>
-      <span>{total.toFixed(2)} ฿</span>
-        </div>
-</div>
-
-  <button
-  onClick={reset}className="bg-white p-3 rounded-xl font-bold mt-10">Reset</button>
-  </div>
-  </div>
-  </div>
-
+    <div className="bg-blue-300 p-6 rounded-3xl text-black w-[300px]">
+      <h1>Bill Form</h1>
+      <input type="number" value={bill} onChange={handleChanged} />
+      <button onClick={handleAddBill}>Add Bill</button>
     </div>
-  );
+  )
 }
-export default Page;
+
+interface ResultProps {
+  bill: number
+  tip: number
+  total: number
+}
+
+const Result = ({ bill, tip, total }: ResultProps) => {
+  return (
+    <div className="bg-blue-300 p-6 rounded-3xl text-black m-3 w-[300px]">
+      <ul>
+      <li>Bill: {bill}</li>
+      <li>Tip (5%): {tip}</li>
+      <li>Total: {total}</li>
+    </ul>
+    </div>
+  )
+}
+
+const IndexPage = () => {
+  const [bill, setBill] = useState(0)
+  const [tip, setTip] = useState(0)
+  const [total, setTotal] = useState(0)
+
+  const addBill = (billAmount: number) => {
+    const tipAmount = billAmount * 0.05
+    const totalAmount = billAmount + tipAmount
+
+    setBill(billAmount)
+    setTip(tipAmount)
+    setTotal(totalAmount)
+  }
+
+  return (
+    <>
+      <BillForm addBill={addBill} />
+      <Result bill={bill} tip={tip} total={total} />
+    </>
+  )
+}
+
+export default IndexPage
