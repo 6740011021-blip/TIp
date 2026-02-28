@@ -19,7 +19,7 @@ fetchtodos();
 
 return(
     <ul>
-{todo.map((todo)=>(<li key={todo.id}>{todo.name}</li>))}
+{todo.map((todo)=>(<li key={todo.id}>{todo.title}</li>))}
     </ul>
     )
 }
